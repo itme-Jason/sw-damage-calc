@@ -3,12 +3,12 @@ import streamlit as st
 import numpy as np
 
 st.set_page_config(page_title="SW Damage Calculator", layout="centered")
-st.title("Summoners War Expected Damage Calculator")
+st.title("SW Ideal Damage Calculator")
 
 # --- Inputs ---
 atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=3000)
 cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=200)
-fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=6, step=1, value=0)
+fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=18, step=1, value=0)
 
 # --- Calculation ---
 atk_bonus = 1 + 0.08 * fight_sets
