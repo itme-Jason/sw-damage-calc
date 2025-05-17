@@ -8,34 +8,38 @@ st.title("Summoners War Expected Damage Calculator")
 lock = st.checkbox("🔒 Lock to 6000 damage", value=True)
 
 # --- Inputs ---
+benchmark = st.number_input("Target Damage Benchmark", min_value=1000, max_value=10000, step=100, value=6000)
 fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=6, step=1, value=0)
 atk_bonus = 1 + 0.08 * fight_sets
-benchmark = 6000
 
 # --- Initialize session state for ATK and CD ---
 if "atk" not in st.session_state:
     st.session_state.atk = 3000
 if "cd" not in st.session_state:
     st.session_state.cd = 200
+if "last_changed" not in st.session_state:
+    st.session_state.last_changed = "cd"
 
 if lock:
     col1, col2 = st.columns(2)
     with col1:
-        new_atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=st.session_state.atk)
+        atk_input = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=st.session_state.atk, key="atk_slider")
     with col2:
-        new_cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=st.session_state.cd)
+        cd_input = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=st.session_state.cd, key="cd_slider")
 
-    # Detect which was changed
-    if new_atk != st.session_state.atk:
-        st.session_state.atk = new_atk
+    # Detect which changed
+    if atk_input != st.session_state.atk:
+        st.session_state.last_changed = "atk"
+    elif cd_input != st.session_state.cd:
+        st.session_state.last_changed = "cd"
+
+    if st.session_state.last_changed == "atk":
+        st.session_state.atk = atk_input
         st.session_state.cd = round(100 + 100 * (benchmark / (st.session_state.atk * atk_bonus) - 1))
-        st.experimental_rerun()
-
-    elif new_cd != st.session_state.cd:
-        st.session_state.cd = new_cd
+    else:
+        st.session_state.cd = cd_input
         crit_multiplier = 1 + (st.session_state.cd - 100) / 100
         st.session_state.atk = round(benchmark / (atk_bonus * crit_multiplier))
-        st.experimental_rerun()
 
     atk = st.session_state.atk
     cd = st.session_state.cd
