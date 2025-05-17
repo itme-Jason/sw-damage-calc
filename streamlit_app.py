@@ -12,34 +12,32 @@ fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=6, step=1,
 atk_bonus = 1 + 0.08 * fight_sets
 benchmark = 6000
 
+# --- Initialize session state for ATK and CD ---
+if "atk" not in st.session_state:
+    st.session_state.atk = 3000
+if "cd" not in st.session_state:
+    st.session_state.cd = 200
+
 if lock:
     col1, col2 = st.columns(2)
     with col1:
-        atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=3000, key="locked_atk")
+        new_atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=st.session_state.atk)
     with col2:
-        cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=200, key="locked_cd")
+        new_cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=st.session_state.cd)
 
-    # Decide which slider changed by tracking session state
-    if "last_atk" not in st.session_state:
-        st.session_state.last_atk = atk
-    if "last_cd" not in st.session_state:
-        st.session_state.last_cd = cd
+    # Detect which was changed
+    if new_atk != st.session_state.atk:
+        # ATK changed → update CD
+        st.session_state.atk = new_atk
+        st.session_state.cd = round(100 + 100 * (benchmark / (st.session_state.atk * atk_bonus) - 1))
+    elif new_cd != st.session_state.cd:
+        # CD changed → update ATK
+        st.session_state.cd = new_cd
+        crit_multiplier = 1 + (st.session_state.cd - 100) / 100
+        st.session_state.atk = round(benchmark / (atk_bonus * crit_multiplier))
 
-    if atk != st.session_state.last_atk:
-        # ATK was changed → update CD
-        cd = 100 + 100 * (benchmark / (atk * atk_bonus) - 1)
-        cd = round(cd)
-        st.session_state.locked_cd = cd
-    elif cd != st.session_state.last_cd:
-        # CD was changed → update ATK
-        crit_multiplier = 1 + (cd - 100) / 100
-        atk = benchmark / (atk_bonus * crit_multiplier)
-        atk = round(atk)
-        st.session_state.locked_atk = atk
-
-    # Save last values
-    st.session_state.last_atk = atk
-    st.session_state.last_cd = cd
+    atk = st.session_state.atk
+    cd = st.session_state.cd
 else:
     atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=3000)
     cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=200)
