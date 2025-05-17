@@ -21,12 +21,14 @@ if lock:
         atk = benchmark / (atk_bonus * crit_multiplier)
         atk = round(atk)
         st.write(f"🔁 Adjusted ATK to maintain 6000 damage: **{atk}**")
+        st.write(f"Crit Damage: **{cd}%**")
 
     else:  # Adjust by ATK
         atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=3000)
         cd = 100 + 100 * (benchmark / (atk * atk_bonus) - 1)
         cd = round(cd)
         st.write(f"🔁 Adjusted Crit Damage to maintain 6000 damage: **{cd}%**")
+        st.write(f"ATK: **{atk}**")
 
 else:
     atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=3000)
