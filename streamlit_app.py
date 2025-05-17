@@ -27,14 +27,15 @@ if lock:
 
     # Detect which was changed
     if new_atk != st.session_state.atk:
-        # ATK changed → update CD
         st.session_state.atk = new_atk
         st.session_state.cd = round(100 + 100 * (benchmark / (st.session_state.atk * atk_bonus) - 1))
+        st.experimental_rerun()
+
     elif new_cd != st.session_state.cd:
-        # CD changed → update ATK
         st.session_state.cd = new_cd
         crit_multiplier = 1 + (st.session_state.cd - 100) / 100
         st.session_state.atk = round(benchmark / (atk_bonus * crit_multiplier))
+        st.experimental_rerun()
 
     atk = st.session_state.atk
     cd = st.session_state.cd
