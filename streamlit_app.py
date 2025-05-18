@@ -25,24 +25,27 @@ if lock:
     previous_atk = st.session_state.atk
     previous_cd = st.session_state.cd
 
-    col1, col2 = st.columns(2)
-    with col1:
-        atk_input = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=previous_atk, key="atk_slider")
-    with col2:
-        cd_input = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=previous_cd, key="cd_slider")
+    atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=previous_atk, key="atk_slider")
+    cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=previous_cd, key="cd_slider")
 
     # Detect which one changed and update session state accordingly
-    if atk_input != previous_atk:
-        st.session_state.atk = atk_input
+    if atk != previous_atk:
+        st.session_state.atk = atk
         crit_multiplier = benchmark / (st.session_state.atk * atk_bonus)
         st.session_state.cd = round((crit_multiplier - 1) * 100 + 100)
-    elif cd_input != previous_cd:
-        st.session_state.cd = cd_input
+    elif cd != previous_cd:
+        st.session_state.cd = cd
         crit_multiplier = 1 + (st.session_state.cd - 100) / 100
         st.session_state.atk = round(benchmark / (atk_bonus * crit_multiplier))
 
     atk = st.session_state.atk
     cd = st.session_state.cd
+
+    # Display fight set bar at bottom of locked mode
+    st.slider("Number of Fight Sets (View Only)", min_value=0, max_value=6, step=1, value=fight_sets, disabled=True, key="fight_view")
+
+
+    # Detect which one changed and update session state accordingly
 
 
 # --- Calculation ---
