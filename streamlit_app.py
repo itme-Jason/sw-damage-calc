@@ -28,9 +28,7 @@ if lock:
     previous_cd = st.session_state.cd
     previous_fight = st.session_state.get("fight_sets", 0)
 
-    atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=previous_atk, key="atk_slider")
-    cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=previous_cd, key="cd_slider")
-        atk_bonus = 1 + 0.08 * fight_sets
+atk_bonus = 1 + 0.08 * fight_sets
 
     # Detect which one changed and update session state accordingly
     if fight_sets != previous_fight:
