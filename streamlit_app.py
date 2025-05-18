@@ -33,7 +33,8 @@ if lock:
 
     # Always recompute to maintain 6000 damage if locked
     atk_bonus = 1 + 0.08 * fight_sets
-    st.session_state.fight_sets = fight_sets
+    # Store fight_sets only if not already managed by Streamlit's widget key system
+        st.session_state["fight_sets_state"] = fight_sets
 
     if atk != previous_atk:
         st.session_state.atk = atk
