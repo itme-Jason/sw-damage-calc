@@ -9,7 +9,7 @@ lock = st.checkbox("🔒 Lock to 6000 damage", value=True)
 
 # --- Inputs ---
 benchmark = st.number_input("Target Damage Benchmark", min_value=1000, max_value=10000, step=100, value=6000)
-fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=6, step=1, value=0)
+
 atk_bonus = 1 + 0.08 * fight_sets
 
 # --- Initialize session state for ATK and CD ---
@@ -42,12 +42,10 @@ if lock:
     cd = st.session_state.cd
 
     # Display fight set bar at bottom of locked mode
-    st.slider("Number of Fight Sets (View Only)", min_value=0, max_value=6, step=1, value=fight_sets, disabled=True, key="fight_view")
+    fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=6, step=1, value=0)
 
 
-    # Detect which one changed and update session state accordingly
-
-
+    
 # --- Calculation ---
 crit_multiplier = 1 + (cd - 100) / 100
 expected_damage = atk * atk_bonus * crit_multiplier
