@@ -51,10 +51,6 @@ if lock:
     cd = st.session_state.cd
     fight_sets = st.session_state.fight_sets
     atk_bonus = 1 + 0.08 * fight_sets
-atk_bonus = 1 + 0.08 * fight_sets
-
-
-    
 # --- Unlocked Mode ---
 else:
     atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=3000, key="atk_unlocked")
