@@ -38,6 +38,7 @@ if lock:
         crit_multiplier = 1 + (cd - 100) / 100
         atk = round(benchmark / (atk_bonus * crit_multiplier))
         st.session_state.atk = atk
+        st.session_state.cd = cd
     elif atk != previous_atk:
         st.session_state.atk = atk
         crit_multiplier = benchmark / (st.session_state.atk * atk_bonus)
