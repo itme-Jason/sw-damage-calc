@@ -8,7 +8,7 @@ st.title("Summoners War Expected Damage Calculator")
 lock = st.checkbox("🔒 Lock to 6000 damage", value=True)
 
 # --- Inputs ---
-benchmark = st.number_input("Target Damage Benchmark", min_value=1000, max_value=10000, step=100, value=6000)
+benchmark = st.number_input("Target Damage Benchmark", min_value=1000, max_value=10000, step=100, value=6000, key="benchmark_input")
 
 # --- Placeholder until defined below ---
 fight_sets = 0
@@ -30,49 +30,22 @@ if lock:
     atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=previous_atk, key="atk_slider")
     cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=previous_cd, key="cd_slider")
     fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=6, step=1, value=previous_fight, key="fight_sets")
-
-    # Always recompute to maintain 6000 damage if locked
     atk_bonus = 1 + 0.08 * fight_sets
-    # Store fight_sets only if not already managed by Streamlit's widget key system
-    st.session_state["fight_sets_state"] = fight_sets
 
-    if atk != previous_atk:
-        st.session_state.atk = atk
-        crit_multiplier = benchmark / (atk * atk_bonus)
-        st.session_state.cd = round((crit_multiplier - 1) * 100 + 100)
-    elif cd != previous_cd:
-        st.session_state.cd = cd
-        crit_multiplier = 1 + (cd - 100) / 100
-        st.session_state.atk = round(benchmark / (atk_bonus * crit_multiplier))
-    elif fight_sets != previous_fight:
-        # If fight sets changed but sliders didn't move, adjust atk to maintain target
-        crit_multiplier = 1 + (cd - 100) / 100
-        st.session_state.atk = round(benchmark / (atk_bonus * crit_multiplier))
-
-    atk = st.session_state.atk
-    cd = st.session_state.cd
-
-    if fight_sets != previous_fight:
-        st.session_state.fight_sets = fight_sets
-        atk_bonus = 1 + 0.08 * fight_sets
+    # Add manual calculate trigger
+    if st.button("🔁 Calculate" if lock else ""): 
         crit_multiplier = 1 + (cd - 100) / 100
         atk = round(benchmark / (atk_bonus * crit_multiplier))
         st.session_state.atk = atk
         st.session_state.cd = cd
-    elif atk != previous_atk:
-        st.session_state.atk = atk
-        crit_multiplier = benchmark / (st.session_state.atk * atk_bonus)
-        st.session_state.cd = round((crit_multiplier - 1) * 100 + 100)
-    elif cd != previous_cd:
-        st.session_state.cd = cd
-        crit_multiplier = 1 + (st.session_state.cd - 100) / 100
-        st.session_state.atk = round(benchmark / (atk_bonus * crit_multiplier))
+        st.session_state.fight_sets = fight_sets
 
     atk = st.session_state.atk
     cd = st.session_state.cd
     fight_sets = st.session_state.fight_sets
     atk_bonus = 1 + 0.08 * fight_sets
-# --- Unlocked Mode ---
+
+
 else:
     atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=3000, key="atk_unlocked")
     cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=200, key="cd_unlocked")
