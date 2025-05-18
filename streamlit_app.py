@@ -29,7 +29,7 @@ if lock:
 
     atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=previous_atk, key="atk_slider")
     cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=previous_cd, key="cd_slider")
-    fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=6, step=1, value=previous_fight, key="fight_sets")
+    fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=6, step=1, value=st.session_state.get("fight_sets", 0), key="fight_sets")
     atk_bonus = 1 + 0.08 * fight_sets
 
     if fight_sets != previous_fight:
