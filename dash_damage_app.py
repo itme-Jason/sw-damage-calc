@@ -83,4 +83,4 @@ def update_damage(n_clicks, lock, atk, cd, fight_sets, benchmark):
     return atk, cd, result
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run(debug=True)
