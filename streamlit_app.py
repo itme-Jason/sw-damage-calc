@@ -12,7 +12,6 @@ benchmark = st.number_input("Target Damage Benchmark", min_value=1000, max_value
 
 # --- Placeholder until defined below ---
 fight_sets = 0
-atk_bonus = 1 + 0.08 * fight_sets
 
 # --- Initialize session state for ATK and CD ---
 if "atk" not in st.session_state:
@@ -52,7 +51,6 @@ if lock:
     cd = st.session_state.cd
     fight_sets = st.session_state.fight_sets
     atk_bonus = 1 + 0.08 * fight_sets
-fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=6, step=1, value=0)
 atk_bonus = 1 + 0.08 * fight_sets
 
 
