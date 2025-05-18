@@ -38,7 +38,7 @@ if lock:
         atk = round(benchmark / (atk_bonus * crit_multiplier))
         st.session_state.atk = atk
         st.session_state.cd = cd
-        st.session_state.fight_sets = fight_sets
+        # Avoid setting session state for widget-managed fight_sets
 
     atk = st.session_state.atk
     cd = st.session_state.cd
