@@ -1,4 +1,3 @@
-
 import dash
 from dash import dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
@@ -46,7 +45,7 @@ app.layout = dbc.Container([
 
     dbc.Row([
         dbc.Col([
-            html.Button("🔁 Calculate", id="calculate-btn", n_clicks=0),
+            
             html.Div(id="damage-output", className="mt-3")
         ])
     ])
@@ -56,21 +55,24 @@ app.layout = dbc.Container([
     Output("atk", "value"),
     Output("cd", "value"),
     Output("damage-output", "children"),
-    Input("calculate-btn", "n_clicks"),
     State("lock-toggle", "value"),
     State("atk", "value"),
     State("cd", "value"),
     State("fight_sets", "value"),
     State("benchmark", "value")
 )
-def update_damage(n_clicks, lock, atk, cd, fight_sets, benchmark):
+def update_damage(atk, cd, fight_sets, benchmark, lock):
     atk_bonus = 1 + 0.08 * fight_sets
 
     if "lock" in lock:
-        crit_multiplier = 1 + (cd - 100) / 100
-        atk = round(benchmark / (atk_bonus * crit_multiplier))
-    else:
-        crit_multiplier = 1 + (cd - 100) / 100
+        changed_by = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
+        if changed_by == "cd" or changed_by == "fight_sets" or changed_by == "benchmark":
+            crit_multiplier = 1 + (cd - 100) / 100
+            atk = round(benchmark / (atk_bonus * crit_multiplier))
+        elif changed_by == "atk":
+            crit_multiplier = benchmark / (atk * atk_bonus)
+            cd = round((crit_multiplier - 1) * 100 + 100)
+    crit_multiplier = 1 + (cd - 100) / 100
 
     expected_damage = atk * atk_bonus * crit_multiplier
     pct = expected_damage / benchmark * 100
@@ -86,4 +88,3 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8050))
     app.run(host="0.0.0.0", port=port, debug=False)
-
