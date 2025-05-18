@@ -43,8 +43,7 @@ if lock:
 
     atk = st.session_state.atk
     cd = st.session_state.cd
-else:
-    atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=3000)
+
     cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=200)
 else:
     atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=3000)
