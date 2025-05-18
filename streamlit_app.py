@@ -21,22 +21,29 @@ if "last_changed" not in st.session_state:
     st.session_state.last_changed = "cd"
 
 if lock:
+    # Track previous values to detect slider activity
+    previous_atk = st.session_state.atk
+    previous_cd = st.session_state.cd
+
     col1, col2 = st.columns(2)
     with col1:
-        atk_input = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=st.session_state.atk, key="atk_slider")
+        atk_input = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=previous_atk, key="atk_slider")
     with col2:
-        cd_input = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=st.session_state.cd, key="cd_slider")
+        cd_input = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=previous_cd, key="cd_slider")
 
-    # Detect which changed
-    if atk_input != st.session_state.atk:
-        st.session_state.last_changed = "atk"
-    elif cd_input != st.session_state.cd:
-        st.session_state.last_changed = "cd"
-
-    if st.session_state.last_changed == "atk":
+    # Detect which one changed and update session state accordingly
+    if atk_input != previous_atk:
         st.session_state.atk = atk_input
-        st.session_state.cd = round(100 + 100 * (benchmark / (st.session_state.atk * atk_bonus) - 1))
-    else:
+        crit_multiplier = benchmark / (st.session_state.atk * atk_bonus)
+        st.session_state.cd = round((crit_multiplier - 1) * 100 + 100)
+    elif cd_input != previous_cd:
+        st.session_state.cd = cd_input
+        crit_multiplier = 1 + (st.session_state.cd - 100) / 100
+        st.session_state.atk = round(benchmark / (atk_bonus * crit_multiplier))
+
+    atk = st.session_state.atk
+    cd = st.session_state.cd
+else:
         st.session_state.cd = cd_input
         crit_multiplier = 1 + (st.session_state.cd - 100) / 100
         st.session_state.atk = round(benchmark / (atk_bonus * crit_multiplier))
