@@ -55,6 +55,13 @@ atk_bonus = 1 + 0.08 * fight_sets
 
 
     
+# --- Unlocked Mode ---
+else:
+    atk = st.slider("Total ATK", min_value=2000, max_value=4000, step=10, value=3000, key="atk_unlocked")
+    cd = st.slider("Crit Damage (%)", min_value=120, max_value=300, step=5, value=200, key="cd_unlocked")
+    fight_sets = st.slider("Number of Fight Sets", min_value=0, max_value=6, step=1, value=0, key="fight_unlocked")
+    atk_bonus = 1 + 0.08 * fight_sets
+
 # --- Calculation ---
 crit_multiplier = 1 + (cd - 100) / 100
 expected_damage = atk * atk_bonus * crit_multiplier
