@@ -25,19 +25,19 @@ app.layout = dbc.Container([
 
     dbc.Row([
         dbc.Col([
-            html.Label("Total ATK"),
+            html.Label(id="atk-label"),
             dcc.Slider(id="atk", min=2000, max=4000, step=10, value=3000,
                        marks={i: str(i) for i in range(2000, 4001, 200)})
         ]),
 
         dbc.Col([
-            html.Label("Crit Damage (%)"),
+            html.Label(id="cd-label"),
             dcc.Slider(id="cd", min=120, max=300, step=5, value=200,
                        marks={i: str(i) for i in range(120, 301, 20)})
         ]),
 
         dbc.Col([
-            html.Label("Number of Fight Sets"),
+            html.Label(id="fight-label"),
             dcc.Slider(id="fight_sets", min=0, max=6, step=1, value=0,
                        marks={i: str(i) for i in range(0, 7)})
         ])
@@ -54,6 +54,9 @@ app.layout = dbc.Container([
 @app.callback(
     Output("atk", "value"),
     Output("cd", "value"),
+    Output("atk-label", "children"),
+    Output("cd-label", "children"),
+    Output("fight-label", "children"),
     Output("damage-output", "children"),
     State("lock-toggle", "value"),
     State("atk", "value"),
@@ -82,7 +85,7 @@ def update_damage(atk, cd, fight_sets, benchmark, lock):
     else:
         result = f"⚠️ You are at {pct:.1f}% of the {benchmark:,} damage benchmark — {expected_damage:,.0f} dmg"
 
-    return atk, cd, result
+    return atk, cd, f"Total ATK ({atk})", f"Crit Damage (%) ({cd})", f"Number of Fight Sets ({fight_sets})", result
 
 if __name__ == "__main__":
     import os
